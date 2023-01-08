@@ -22,3 +22,17 @@ begin
 end;
 
 ```
+
+
+The growth function that grows linearly can be set also. For instance to grow linearly in blocks of 100
+
+```
+...
+  PrimeBuilder.SetGrowthFunction(function (Size: integer): integer
+    begin
+      result := Size + 100;
+    end
+  );
+ ...
+ ```
+
