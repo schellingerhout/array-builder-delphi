@@ -1,6 +1,9 @@
 # array-builder-delphi
 Generic Builder for Dynamic Arrays in Delphi
 
+Code for blogpost:
+https://schellingerhout.github.io/utilities/array-builder-delphi/
+
 
 Sample use:
 
