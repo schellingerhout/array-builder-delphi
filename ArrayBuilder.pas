@@ -1,72 +1,69 @@
-type
-
 unit ArrayBuilder;
+
 interface
+
 Type
 
-TGrowthFunction = reference to function(CurrentSize: Integer): Integer;
+  TArrayBuilder<T> = Record
+  private
+    FData: TArray<T>;
+    FCount: Integer;
 
-TArrayBuilder<T> = Record
-private
-  Data: TArray<T>;
-  Count: Integer;
-  GrowthFunction: TGrowthFunction;
-public
-  class function Init(Size: integer): TArrayBuilder<T>; static;  
+    procedure Grow;
+  public
+    class function Init(Size: Integer): TArrayBuilder<T>; static;
 
-  // Record Initializers added in Delphi 10.4
-  class operator Initialize (out Dest: TArrayBuilder<T>);   
+    // Record Initializers added in Delphi 10.4
+    class operator Initialize(out Dest: TArrayBuilder<T>);
 
-  procedure Add(const Element: T);
-  procedure SetGrowthFunction(const F: TGrowthFunction);
-  function GetArray: TArray<T>;
-end;
+    procedure Add(const Element: T);
+    function GetArray: TArray<T>;
+  end;
 
 implementation
 
-// default growth function... possible extensions can pass a reference to a function like this
-function NextSize(Size: integer): integer; 
-begin
-  if size = 0 then
-    exit(4);
-    
-  if size < 5 then
-    exit(8);
-
-  if size < 9 then
-    exit(16);
-
-  result := (Size * 3) div 2)
-end;
-
-
 class operator TArrayBuilder<T>.Initialize(out Dest: TArrayBuilder<T>);
 const
-  DefaultRec : TArrayBuilder<T> = (); //count = 0, dynamic array empty
+  DefaultRec: TArrayBuilder<T> = (); // count = 0, dynamic array empty
 begin
   Dest := DefaultRec;
-  Dest.GrowthFunction := NextSize;
 end;
 
-class function TArrayBuilder<T>.Init(Size: integer): TArrayBuilder<T>; static;
+class function TArrayBuilder<T>.Init(Size: Integer): TArrayBuilder<T>;
 begin
-  Count := 0;
-  SetLength(Data, Size);  
+  SetLength(Result.FData, Size);
 end;
-
 
 procedure TArrayBuilder<T>.Add(const Element: T);
 begin
-  if Count > High(Data) then
-     SetLength(Data, GrowthFunction(Length(Data)) );
+  if FCount > High(FData) then
+    Grow;
 
-  Data[Count] := Element;
-  Inc(Count);
+  FData[FCount] := Element;
+  Inc(FCount);
 end;
 
+procedure TArrayBuilder<T>.Grow;
+var
+  NewSize: Integer;
+begin
+
+  if FData = nil then
+    NewSize := 4
+  else if Length(FData) < 5 then
+    NewSize := 8
+  else if Length(FData) < 9 then
+    NewSize := 16
+  else
+    NewSize := (Length(FData) * 3) div 2;
+
+  SetLength(FData, NewSize);
+end;
 
 function TArrayBuilder<T>.GetArray: TArray<T>;
 begin
-  SetLength(Data, Count);
-  Result := Data;
+  SetLength(FData, FCount);
+  Result := FData;
 end;
+
+end.
