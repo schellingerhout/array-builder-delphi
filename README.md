@@ -26,7 +26,7 @@ end;
 
 The growth function that grows linearly can be set also. For instance to grow linearly in blocks of 100
 
-```
+```pascal
 ...
   PrimeBuilder.SetGrowthFunction(function (Size: integer): integer
     begin
