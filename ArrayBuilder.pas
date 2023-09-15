@@ -1,5 +1,5 @@
 {
-Copyright (c) 2002 Jasper Schellingerhout
+Copyright (c) 2022 Jasper Schellingerhout
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
